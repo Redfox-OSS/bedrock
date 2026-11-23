@@ -43,12 +43,35 @@ publishing {
             pom {
                 name.set("Bedrock")
                 description.set("A calm, frosted design system for Android, built with Jetpack Compose.")
+                url.set("https://github.com/Redfox-OSS/bedrock")
                 licenses {
                     license {
                         name.set("GNU General Public License v3.0")
                         url.set("https://www.gnu.org/licenses/gpl-3.0.html")
                     }
                 }
+                developers {
+                    developer {
+                        id.set("debz-g")
+                        name.set("Debayan G")
+                        url.set("https://github.com/debz-g")
+                    }
+                }
+                scm {
+                    url.set("https://github.com/Redfox-OSS/bedrock")
+                    connection.set("scm:git:https://github.com/Redfox-OSS/bedrock.git")
+                }
+            }
+        }
+    }
+    repositories {
+        // The Maven repository on GitHub Pages: the release workflow checks out the gh-pages
+        // branch and passes its maven/ folder as -PreleaseRepo, so each release adds to it.
+        val releaseRepo = providers.gradleProperty("releaseRepo")
+        if (releaseRepo.isPresent) {
+            maven {
+                name = "release"
+                url = uri(releaseRepo.get())
             }
         }
     }

@@ -20,6 +20,45 @@ bouncing.
 
 The full reference (every value, motion spec and usage rule) is in **[docs/GUIDE.md](docs/GUIDE.md)**.
 
+## Install
+
+Bedrock is published from this repository; no account or token is needed to use it. Add the
+Maven repository in `settings.gradle.kts`:
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven("https://redfox-oss.github.io/bedrock/maven") {
+            content { includeGroup("dev.redfox") }
+        }
+    }
+}
+```
+
+then the dependency, for example through the version catalog:
+
+```toml
+[versions]
+bedrock = "0.1.0"
+
+[libraries]
+bedrock = { group = "dev.redfox", name = "bedrock", version.ref = "bedrock" }
+```
+
+```kotlin
+// app/build.gradle.kts
+dependencies { implementation(libs.bedrock) }
+```
+
+Compose, Material 3 and Haze come with it. Each [release](https://github.com/Redfox-OSS/bedrock/releases)
+also has the AAR, its sources and the catalog APK attached.
+
+**From source, while changing Bedrock and an app together:** clone Bedrock next to the app and add
+`includeBuild("../Bedrock")` to the app's `settings.gradle.kts`. Gradle uses the local source in
+place of the published `dev.redfox:bedrock`, so changes show up on the next build.
+
 ## Quick start
 
 ```kotlin
@@ -41,6 +80,16 @@ setContent {
     }
 }
 ```
+
+## Releasing
+
+1. Set `version` in `bedrock/build.gradle.kts`, and turn the changelog's "unreleased" heading into
+   that version.
+2. Commit, then tag and push: `git tag v0.1.0 && git push origin v0.1.0`.
+
+The release workflow checks the tag matches the version, builds and tests, adds the version to the
+Maven repository on GitHub Pages (never overwriting a released version), and creates a GitHub
+Release with the AAR, its sources and the catalog APK.
 
 ## Toolchain
 

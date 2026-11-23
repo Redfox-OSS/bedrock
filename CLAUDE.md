@@ -66,8 +66,13 @@ Obsidian; don't upgrade casually (Haze 2.x needs Compose 1.12 and Kotlin 2.4).
 5. An entry in `CHANGELOG.md`.
 6. `./gradlew build`, then look at it on a phone.
 
-## Git
+## Git and releases
 
 - Commits are the maintainer's: no `Co-Authored-By` or "Generated with" lines in messages.
 - Don't push, tag or release without asking.
+- Releasing: set `version` in `bedrock/build.gradle.kts`, turn the changelog's "unreleased" heading
+  into that version, commit, then push a `v<version>` tag. The release workflow
+  (`.github/workflows/release.yml`) publishes to the Maven repository on the `gh-pages` branch
+  (https://redfox-oss.github.io/bedrock/maven) and attaches the AAR, sources and catalog APK to a
+  GitHub Release. A released version is never overwritten: fix forward with a patch version.
 - Never commit signing keys or `local.properties`.
