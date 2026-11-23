@@ -169,9 +169,9 @@ from the current velocity without a jolt.
 
 | Spec | Damping | Stiffness | For |
 |---|---|---|---|
-| `quick()` | 1.0 | 520 | press, toggles, colour |
-| `settle()` | 1.0 | 220 | pills, indicators, layout |
-| `glide()` | 1.0 | 110 | sheets, pages, large surfaces |
+| `quick()` | 1.0 | 700 | press, toggles, colour |
+| `settle()` | 1.0 | 320 | pills, indicators, layout |
+| `glide()` | 1.0 | 170 | sheets, pages, large surfaces |
 
 ### Curves and durations
 
@@ -179,13 +179,13 @@ from the current velocity without a jolt.
 
 | `BrDurations` | ms | For |
 |---|---|---|
-| `Fade` | 180 | something leaving |
-| `Swap` | 280 | labels, icons, numbers |
-| `Enter` | 440 | screens, revealed content |
-| `Linger` | 640 | quiet background fades |
+| `Fade` | 150 | something leaving |
+| `Swap` | 230 | labels, icons, numbers |
+| `Enter` | 360 | screens, revealed content |
+| `Linger` | 520 | quiet background fades |
 | `Ambient` | 16000 | one lap of aura drift |
 
-Stagger: 45ms per sibling, capped at index 8.
+Stagger: 38ms per sibling, capped at index 8.
 
 ### Building blocks
 

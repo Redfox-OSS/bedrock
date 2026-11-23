@@ -28,4 +28,7 @@ First version.
 - Glass without blur (no provider, or inside a dialog window) falls back to its tint alone.
 - The compact nav bar only reacts to scrolling the content actually did, so a drag on a list too
   short to scroll no longer shrinks it.
+- Motion about a fifth quicker, still never overshooting: springs `quick` 700, `settle` 320,
+  `glide` 170 (were 520 / 220 / 110); `BrDurations` Fade 150, Swap 230, Enter 360, Linger 520
+  (were 180 / 280 / 440 / 640); stagger 38ms (was 45).
 - Catalog app with Today, Foundations, Components, Motion and Principles tabs.

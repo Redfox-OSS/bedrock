@@ -69,9 +69,9 @@ internal fun MotionScreen() {
     val accent = LocalThemeChoice.current.accent
 
     val springs = listOf(
-        SpringDemo("quick", "1.0 damping, 520 stiffness: presses, toggles", BrMotion.quick(), accent.main),
-        SpringDemo("settle", "1.0 damping, 220: pills, indicators, layout", BrMotion.settle(), accent.main),
-        SpringDemo("glide", "1.0 damping, 110: sheets and pages", BrMotion.glide(), accent.main),
+        SpringDemo("quick", "1.0 damping, 700 stiffness: presses, toggles", BrMotion.quick(), accent.main),
+        SpringDemo("settle", "1.0 damping, 320: pills, indicators, layout", BrMotion.settle(), accent.main),
+        SpringDemo("glide", "1.0 damping, 170: sheets and pages", BrMotion.glide(), accent.main),
         SpringDemo("Obsidian bouncy", "0.55 damping, 380, for comparison", spring(dampingRatio = 0.55f, stiffness = 380f), colors.textTertiary),
     )
     val dots = remember { springs.map { Animatable(0f) } }
