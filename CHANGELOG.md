@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+- `BrSheet`, `BrDialog` and `BrDialogFrame` are solid surfaces. They open in their own window, which
+  can't blur the page, and at 97% opacity bright text behind them ghosted through.
+- Their window now draws edge to edge: the sheet reaches the bottom of the screen instead of
+  stopping above a black strip, and the dim covers the status bar too.
+
 ## 0.1.0
 
 First version.

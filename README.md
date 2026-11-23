@@ -41,7 +41,7 @@ then the dependency, for example through the version catalog:
 
 ```toml
 [versions]
-bedrock = "0.1.0"
+bedrock = "0.1.1"
 
 [libraries]
 bedrock = { group = "dev.redfox", name = "bedrock", version.ref = "bedrock" }

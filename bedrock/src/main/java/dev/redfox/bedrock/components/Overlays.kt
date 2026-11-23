@@ -92,6 +92,17 @@ private fun OverlayWindow(
         SideEffect {
             window?.apply {
                 setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
+                // Edge to edge, like the page behind: without these a dialog window leaves the
+                // system bars to Android, which paints them black (a dark strip under a sheet and
+                // an undimmed band under the status bar). The sheet pads its own content.
+                attributes = attributes.apply { fitInsetsTypes = 0 }
+                addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                @Suppress("DEPRECATION")
+                statusBarColor = android.graphics.Color.TRANSPARENT
+                @Suppress("DEPRECATION")
+                navigationBarColor = android.graphics.Color.TRANSPARENT
+                isNavigationBarContrastEnforced = false
+                isStatusBarContrastEnforced = false
                 setDimAmount(0f)
                 setWindowAnimations(0)
             }
@@ -170,8 +181,9 @@ public fun BrSheet(
                         },
                     )
                     .floatShadow(shape, radius = 32.dp, offsetY = 0.dp, alpha = 0.35f)
-                    // Its own window can't blur the page, so the sheet is a near-solid surface.
-                    .glass(shape, tint = colors.surface.copy(alpha = 0.97f))
+                    // Its own window can't blur the page, so the sheet is a solid surface (anything
+                    // less lets bright text behind it ghost through), still with the lit rim.
+                    .glass(shape, tint = colors.surface)
                     .windowInsetsPadding(WindowInsets.navigationBars)
                     // Rides above the keyboard when a field inside has focus.
                     .imePadding()
@@ -244,7 +256,7 @@ public fun BrDialogFrame(
                     .padding(horizontal = BrSpacing.XXL)
                     .widthIn(max = 400.dp)
                     .floatShadow(BrShapes.XLarge, radius = 40.dp, offsetY = 16.dp)
-                    .glass(BrShapes.XLarge, tint = BedrockTheme.colors.surface.copy(alpha = 0.97f))
+                    .glass(BrShapes.XLarge, tint = BedrockTheme.colors.surface)
                     .padding(BrSpacing.XL),
                 content = content,
             )

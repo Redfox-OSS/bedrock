@@ -6,7 +6,7 @@ plugins {
 
 // Bedrock: a calm, frosted design system for Android, as a standalone Compose library.
 group = "dev.redfox"
-version = "0.1.0"
+version = "0.1.1"
 
 android {
     namespace = "dev.redfox.bedrock"
