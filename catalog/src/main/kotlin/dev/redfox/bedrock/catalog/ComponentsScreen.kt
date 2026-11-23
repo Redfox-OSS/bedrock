@@ -1,6 +1,5 @@
 package dev.redfox.bedrock.catalog
 
-import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,7 +40,11 @@ import dev.redfox.bedrock.components.BrButton
 import dev.redfox.bedrock.components.BrCard
 import dev.redfox.bedrock.components.BrCheckbox
 import dev.redfox.bedrock.components.BrChip
+import dev.redfox.bedrock.components.BrDayChip
 import dev.redfox.bedrock.components.BrDialog
+import dev.redfox.bedrock.components.BrFab
+import dev.redfox.bedrock.components.BrMenu
+import dev.redfox.bedrock.components.BrMenuItem
 import dev.redfox.bedrock.components.BrIconButton
 import dev.redfox.bedrock.components.BrProgressBar
 import dev.redfox.bedrock.components.BrProgressRing
@@ -175,6 +178,11 @@ private fun ButtonsPage() {
                 BrIconButton(painterResource(R.drawable.ic_settings), "Settings", {}, variant = IconButtonVariant.Plain)
             }
         }
+        demo("Floating button", 6, note = "The one add action on a list screen. It eases in once, with no spin.") {
+            Box(Modifier.fillMaxWidth().height(96.dp), contentAlignment = Alignment.CenterEnd) {
+                BrFab(painterResource(R.drawable.ic_plus), "Add", {})
+            }
+        }
         demo("Chips", 5, note = "The selected chip turns warm white; counts sit quietly beside the label.") {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(BrSpacing.S), verticalArrangement = Arrangement.spacedBy(BrSpacing.S)) {
                 listOf("All" to 232, "Websites" to 45, "Apps" to 37, "Components" to 150).forEachIndexed { i, (label, count) ->
@@ -192,6 +200,7 @@ private fun SelectionPage() {
     var checks by remember { mutableStateOf(setOf(0)) }
     var radio by remember { mutableIntStateOf(1) }
     var segment by remember { mutableIntStateOf(0) }
+    var days by remember { mutableStateOf(setOf(0, 1, 2, 3, 4)) }
     DetailPage("Selection", "Every control glides into place and rests there.") {
         demo("Switch", 1, note = "Hold the thumb: it widens under your finger.") {
             ListGroup {
@@ -224,6 +233,19 @@ private fun SelectionPage() {
         demo("Segmented control", 4) {
             SegmentedControl(listOf("Day", "Week", "Month", "Year"), segment, { segment = it })
             SegmentedControl(listOf("List", "Grid"), segment.coerceAtMost(1), { segment = it })
+        }
+        demo("Day chips", 5, note = "For repeat days. Selected days fill with the accent.") {
+            val names = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                names.forEachIndexed { i, name ->
+                    BrDayChip(
+                        label = name.take(1),
+                        selected = i in days,
+                        onClick = { days = if (i in days) days - i else days + i },
+                        contentDescription = name,
+                    )
+                }
+            }
         }
     }
 }
@@ -431,14 +453,26 @@ private fun OverlaysPage() {
     var dialog by remember { mutableStateOf(false) }
     val toasts = LocalToasts.current
     val scope = rememberCoroutineScope()
-    BackHandler(enabled = sheet || dialog) { sheet = false; dialog = false }
+    var menu by remember { mutableStateOf(false) }
+    var sort by remember { mutableIntStateOf(0) }
     Box(Modifier.fillMaxSize()) {
-        DetailPage("Overlays", "Sheets glide up; dialogs ease in. Neither ever bounces.") {
+        DetailPage("Overlays", "Sheets and dialogs open in their own window, above everything, including a nav bar.") {
             demo("Sheet", 1, note = "Pull it down to dismiss, or tap outside.") {
                 BrButton("Open a sheet", { sheet = true }, Modifier.fillMaxWidth(), variant = ButtonVariant.Tonal)
             }
             demo("Dialog", 2) {
                 BrButton("Delete a note", { dialog = true }, Modifier.fillMaxWidth(), variant = ButtonVariant.Tonal)
+            }
+            demo("Menu", 3, note = "Actions behind a more button. The selected choice carries a check.") {
+                Box {
+                    BrButton("Sort: ${listOf("Time", "Name", "Group")[sort]}", { menu = true }, variant = ButtonVariant.Tonal, size = ButtonSize.Medium)
+                    BrMenu(expanded = menu, onDismissRequest = { menu = false }) {
+                        listOf("Time", "Name", "Group").forEachIndexed { i, label ->
+                            BrMenuItem(label, { sort = i; menu = false }, selected = sort == i)
+                        }
+                        BrMenuItem("Delete all", { menu = false }, icon = painterResource(R.drawable.ic_trash), destructive = true)
+                    }
+                }
             }
         }
         BrSheet(visible = sheet, onDismiss = { sheet = false }, title = "Weekly summary") {

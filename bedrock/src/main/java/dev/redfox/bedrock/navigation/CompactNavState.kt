@@ -18,8 +18,9 @@ import androidx.compose.ui.unit.dp
  * Whether the [BrNavBar] should be compact, worked out from scrolling. Attach [connection] with
  * `Modifier.nestedScroll` on the screen container and pass [compact] to the bar.
  *
- * The bar only changes after the content has travelled a short distance in one direction, so a
- * slow drag, a nudge, or a finger resting on the list never makes it flicker between forms.
+ * The bar only changes after the content has actually scrolled a short distance in one direction,
+ * so a nudge, a drag on a list too short to scroll, or a finger resting on the list never makes it
+ * flicker between forms.
  */
 @Stable
 public class CompactNavState internal constructor(
@@ -39,19 +40,18 @@ public class CompactNavState internal constructor(
 
     /** Observes every vertical scroll beneath it. Consumes nothing, so lists behave as before. */
     public val connection: NestedScrollConnection = object : NestedScrollConnection {
-        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-            // Only y is read, so horizontal swipes (a row of chips) never change the bar.
-            val dy = available.y
-            if (dy == 0f) return Offset.Zero
-            // A change of direction starts the count again.
-            if ((dy < 0f) != (travel < 0f)) travel = 0f
-            travel += dy
-            if (travel < -thresholdPx) state.value = true
-            else if (travel > thresholdPx) state.value = false
-            return Offset.Zero
-        }
-
         override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+            // Only scrolling the content actually did counts: a drag on a list too short to
+            // scroll moves nothing, so it never shrinks the bar. Only y is read, so horizontal
+            // swipes (a row of chips) never change it either.
+            val dy = consumed.y
+            if (dy != 0f) {
+                // A change of direction starts the count again.
+                if ((dy < 0f) != (travel < 0f)) travel = 0f
+                travel += dy
+                if (travel < -thresholdPx) state.value = true
+                else if (travel > thresholdPx) state.value = false
+            }
             // Leftover downward delta means the list is already at its top: always show the full bar.
             if (available.y > 0f) expand()
             return Offset.Zero

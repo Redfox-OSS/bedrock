@@ -45,6 +45,9 @@ import dev.redfox.bedrock.components.IconTile
 import dev.redfox.bedrock.components.ListGroup
 import dev.redfox.bedrock.components.ListRow
 import dev.redfox.bedrock.motion.BrMotion
+import dev.redfox.bedrock.motion.BrTransitions
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.runtime.mutableStateOf
 import dev.redfox.bedrock.motion.RevealScope
 import dev.redfox.bedrock.motion.RollingNumber
 import dev.redfox.bedrock.motion.SwapText
@@ -105,6 +108,21 @@ internal fun MotionScreen() {
         demo("The curve", 2, note = "Timed motion uses one curve: fast to arrive, long to settle (cubic 0.22, 1, 0.36, 1).") {
             BrCard(Modifier.fillMaxWidth()) {
                 CurvePlot(Modifier.fillMaxWidth().height(140.dp), accent.main)
+            }
+        }
+
+        demo("Disclosure", 3, note = "Opening content: the space settles open, then the content fades in. Closing reverses it.") {
+            var open by remember { mutableStateOf(false) }
+            BrCard(Modifier.fillMaxWidth(), onClick = { open = !open }) {
+                Text(if (open) "Hide details" else "Show details", style = type.label, color = colors.textPrimary)
+                AnimatedVisibility(open, enter = BrTransitions.expandIn, exit = BrTransitions.collapseOut) {
+                    Text(
+                        "Uses BrTransitions.expandIn and collapseOut. For inline content growing from the start edge, revealStart and concealStart.",
+                        style = type.body,
+                        color = colors.textSecondary,
+                        modifier = Modifier.padding(top = BrSpacing.S),
+                    )
+                }
             }
         }
 

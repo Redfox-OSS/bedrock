@@ -22,6 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInParent
@@ -39,14 +41,20 @@ import dev.redfox.bedrock.theme.BrSpacing
  * starts (not under the icons). Give each [ListRow] inside `divider = true` except the last.
  */
 @Composable
-public fun ListGroup(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+public fun ListGroup(
+    modifier: Modifier = Modifier,
+    /** Pass `BrShapes.concentric(…)` when the group sits inset inside a dialog or sheet. */
+    shape: Shape = BrShapes.Large,
+    color: Color = BedrockTheme.colors.surface,
+    content: @Composable ColumnScope.() -> Unit,
+) {
     val colors = BedrockTheme.colors
     Column(
         modifier
             .fillMaxWidth()
-            .clip(BrShapes.Large)
-            .background(colors.surface)
-            .border(1.dp, colors.line, BrShapes.Large),
+            .clip(shape)
+            .background(color)
+            .border(1.dp, colors.line, shape),
         content = content,
     )
 }

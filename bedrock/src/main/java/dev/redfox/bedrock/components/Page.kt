@@ -1,5 +1,6 @@
 package dev.redfox.bedrock.components
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,11 +39,10 @@ import androidx.compose.ui.unit.dp
 import dev.redfox.bedrock.R
 import dev.redfox.bedrock.effects.glass
 import dev.redfox.bedrock.effects.glassSource
+import dev.redfox.bedrock.motion.SwapText
 import dev.redfox.bedrock.motion.revealOnEnter
 import dev.redfox.bedrock.theme.BedrockTheme
 import dev.redfox.bedrock.theme.BrSpacing
-
-private val SideSlot = 96.dp
 
 /** Height of the bar at the top of a [BrPage], below the status bar. */
 public val TopBarHeight: Dp = 56.dp
@@ -78,19 +79,16 @@ public fun BrTopBar(
                 .graphicsLayer { alpha = collapse.value }
                 .background(colors.line)
         )
-        Row(
-            Modifier
+        TopBarSlots(
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = status)
                 .height(TopBarHeight)
                 .padding(horizontal = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            // Equal side slots keep the small title truly centred.
-            Row(Modifier.width(SideSlot), verticalAlignment = Alignment.CenterVertically) {
+            start = {
                 if (onBack != null) BrIconButton(painterResource(R.drawable.br_ic_back), "Back", onBack, variant = IconButtonVariant.Glass)
-            }
-            Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
+            },
+            title = {
                 Text(
                     title,
                     style = type.label,
@@ -104,13 +102,99 @@ public fun BrTopBar(
                         translationY = (1f - t) * 6.dp.toPx()
                     },
                 )
-            }
-            Row(
-                Modifier.width(SideSlot),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-                verticalAlignment = Alignment.CenterVertically,
-                content = actions,
-            )
+            },
+            end = {
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically, content = actions)
+            },
+        )
+    }
+}
+
+/**
+ * Start slot, centred title, end slot. The slots take what they need (one back button, three
+ * actions); the title gets the width left between the wider of the two on both sides, so it stays
+ * truly centred however the actions change.
+ */
+@Composable
+private fun TopBarSlots(
+    modifier: Modifier,
+    start: @Composable () -> Unit,
+    title: @Composable () -> Unit,
+    end: @Composable () -> Unit,
+) {
+    Layout(
+        contents = listOf(start, title, end),
+        modifier = modifier,
+    ) { (startM, titleM, endM), constraints ->
+        val loose = constraints.copy(minWidth = 0, minHeight = 0)
+        val s = startM.map { it.measure(loose) }
+        val e = endM.map { it.measure(loose) }
+        val side = maxOf(s.maxOfOrNull { it.width } ?: 0, e.maxOfOrNull { it.width } ?: 0)
+        val gap = 8.dp.roundToPx()
+        val titleWidth = (constraints.maxWidth - 2 * (side + gap)).coerceAtLeast(0)
+        val t = titleM.map { it.measure(loose.copy(maxWidth = titleWidth)) }
+        val h = constraints.maxHeight
+        layout(constraints.maxWidth, h) {
+            s.forEach { it.place(0, (h - it.height) / 2) }
+            e.forEach { it.place(constraints.maxWidth - it.width, (h - it.height) / 2) }
+            t.forEach { it.place((constraints.maxWidth - it.width) / 2, (h - it.height) / 2) }
+        }
+    }
+}
+
+/**
+ * The top of the page inset a [BrTopBar] needs: status bar plus [TopBarHeight]. Pad scrolling
+ * content by this so it starts below the bar.
+ */
+@Composable
+public fun topBarClearance(): Dp = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + TopBarHeight
+
+/**
+ * How far a list has scrolled under its [BrTopBar] (0 to 1, over the first [span]). Put a
+ * [BrLargeTitle] as the list's first item; once it has scrolled away the bar is fully frosted.
+ */
+@Composable
+public fun rememberTopBarCollapse(state: LazyListState, span: Dp = 56.dp): State<Float> {
+    val px = with(LocalDensity.current) { span.toPx() }
+    return remember(state, px) {
+        derivedStateOf {
+            if (state.firstVisibleItemIndex > 0) 1f
+            else (state.firstVisibleItemScrollOffset / px).coerceIn(0f, 1f)
+        }
+    }
+}
+
+/** [rememberTopBarCollapse] for a plain `verticalScroll` column. */
+@Composable
+public fun rememberTopBarCollapse(state: ScrollState, span: Dp = 56.dp): State<Float> {
+    val px = with(LocalDensity.current) { span.toPx() }
+    return remember(state, px) { derivedStateOf { (state.value / px).coerceIn(0f, 1f) } }
+}
+
+/**
+ * The large page title (and optional subtitle) that sits at the top of a page's content, below a
+ * [BrTopBar]. It fades as [collapse] rises, as the bar's small title takes over.
+ */
+@Composable
+public fun BrLargeTitle(
+    title: String,
+    collapse: State<Float>,
+    modifier: Modifier = Modifier,
+    subtitle: String? = null,
+) {
+    val colors = BedrockTheme.colors
+    val type = BedrockTheme.typography
+    Column(
+        modifier
+            .fillMaxWidth()
+            .padding(horizontal = BrSpacing.Gutter)
+            .padding(top = BrSpacing.XS, bottom = BrSpacing.XL)
+            .graphicsLayer { alpha = 1f - collapse.value }
+    ) {
+        SwapText(title, type.title, colors.textPrimary)
+        if (subtitle != null) {
+            Spacer(Modifier.height(BrSpacing.XS))
+            Text(subtitle, style = type.body, color = colors.textSecondary)
         }
     }
 }
@@ -134,13 +218,7 @@ public fun BrPage(
     val colors = BedrockTheme.colors
     val type = BedrockTheme.typography
     val status = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-    val titleSpan = with(LocalDensity.current) { 56.dp.toPx() }
-    val collapse = remember(state) {
-        derivedStateOf {
-            if (state.firstVisibleItemIndex > 0) 1f
-            else (state.firstVisibleItemScrollOffset / titleSpan).coerceIn(0f, 1f)
-        }
-    }
+    val collapse = rememberTopBarCollapse(state)
     Box(modifier.fillMaxSize()) {
         LazyColumn(
             state = state,

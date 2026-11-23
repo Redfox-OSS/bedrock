@@ -18,4 +18,14 @@ First version.
   `BrAvatar`, `StatTile`, `EmptyState`, `BrSheet` / `SheetAction`, `BrDialog`, `BrPage` / `BrTopBar`.
 - Navigation: `BrNavBar`, icon-only with a pill selection you can hold and scrub, and a compact form
   it eases into while content scrolls (`compact`, `rememberCompactNavState`); `brNavClearance()`.
+- `BrMenu` / `BrMenuItem`, `BrDayChip`, `BrFab`, `BrDialogFrame`; `BrSheet` and `BrDialog` open in
+  their own window so they cover a floating nav bar.
+- `BrTopBar` side slots size to their content; `BrLargeTitle`, `rememberTopBarCollapse`,
+  `topBarClearance` for hand-built pages.
+- `RevealColumn`; `BrTransitions.expandIn / collapseOut / revealStart / concealStart / swap`.
+- `BrButton` / `BrIconButton` take a `haptic` override; `ListGroup` takes a `shape` (for nesting
+  concentrically in dialogs) and `color`; `BrSheet` rides above the keyboard.
+- Glass without blur (no provider, or inside a dialog window) falls back to its tint alone.
+- The compact nav bar only reacts to scrolling the content actually did, so a drag on a list too
+  short to scroll no longer shrinks it.
 - Catalog app with Today, Foundations, Components, Motion and Principles tabs.

@@ -2,6 +2,13 @@ package dev.redfox.bedrock.motion
 
 import androidx.compose.animation.BoundsTransform
 import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.tween
@@ -10,8 +17,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 
 /**
  * Screen-to-screen motion. The incoming screen glides a short way while it fades in; the outgoing
@@ -57,4 +66,38 @@ public object BrTransitions {
     public val sharedBounds: BoundsTransform = BoundsTransform { _, _ ->
         BrMotion.glide(Rect.VisibilityThreshold)
     }
+
+    // -----------------------------------------------------------------------------------------
+    // In-place disclosure (for AnimatedVisibility / AnimatedContent)
+    // -----------------------------------------------------------------------------------------
+
+    /** Content opening below its trigger: the space settles open as the content fades in. */
+    public val expandIn: EnterTransition
+        get() = expandVertically(BrMotion.settle(IntSize.VisibilityThreshold)) +
+            fadeIn(tween(BrDurations.Enter, delayMillis = 60, easing = BrMotion.Calm))
+
+    /** The reverse of [expandIn]: fades first, then the space closes. */
+    public val collapseOut: ExitTransition
+        get() = shrinkVertically(BrMotion.settle(IntSize.VisibilityThreshold)) + fadeOut(tween(BrDurations.Fade))
+
+    /** Inline content growing in from the start edge (a selection checkbox beside a row). */
+    public val revealStart: EnterTransition
+        get() = expandHorizontally(BrMotion.settle(IntSize.VisibilityThreshold), expandFrom = Alignment.Start) +
+            fadeIn(tween(BrDurations.Swap, delayMillis = 60, easing = BrMotion.Calm))
+
+    /** The reverse of [revealStart]. */
+    public val concealStart: ExitTransition
+        get() = shrinkHorizontally(BrMotion.settle(IntSize.VisibilityThreshold), shrinkTowards = Alignment.Start) +
+            fadeOut(tween(BrDurations.Fade))
+
+    /**
+     * One set of controls replacing another in place (header actions entering selection mode):
+     * a crossfade, the newcomer a beat behind, with the size easing between them.
+     */
+    public val swap: ContentTransform
+        get() = ContentTransform(
+            targetContentEnter = fadeIn(tween(BrDurations.Swap, delayMillis = 60, easing = BrMotion.Calm)),
+            initialContentExit = fadeOut(tween(BrDurations.Fade)),
+            sizeTransform = SizeTransform(clip = false) { _, _ -> BrMotion.settle(IntSize.VisibilityThreshold) },
+        )
 }

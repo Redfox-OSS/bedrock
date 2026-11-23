@@ -40,6 +40,9 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
@@ -287,5 +290,37 @@ public fun SegmentedControl(
                 }
             }
         }
+    }
+}
+
+/**
+ * A round day-of-week toggle (M T W T F S S) for repeat pickers. Selected days fill with the
+ * accent; the rest sit on a raised neutral. Colour changes ease; nothing pops.
+ */
+@Composable
+public fun BrDayChip(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentDescription: String = label,
+) {
+    val colors = BedrockTheme.colors
+    val fill by animateColorAsState(if (selected) colors.accentMain else colors.surfaceRaised, BrMotion.quick(), label = "dayFill")
+    val text by animateColorAsState(if (selected) colors.onAccent else colors.textSecondary, BrMotion.quick(), label = "dayText")
+    Box(
+        modifier
+            .size(40.dp)
+            .pressable(role = Role.Checkbox, pressedScale = 0.92f, haptic = HapticFeedbackType.SegmentTick, onClick = onClick)
+            .clip(CircleShape)
+            .background(fill)
+            .border(1.dp, if (selected) androidx.compose.ui.graphics.Color.Transparent else colors.line, CircleShape)
+            .semantics {
+                this.contentDescription = contentDescription
+                this.selected = selected
+            },
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(label, style = BedrockTheme.typography.labelSmall, color = text)
     }
 }

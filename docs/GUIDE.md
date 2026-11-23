@@ -193,6 +193,9 @@ Stagger: 45ms per sibling, capped at index 8.
   plays in a screen's first 700ms, so scrolling never replays it; pass `enabled = false` on pop.
 - `BrTransitions.push() / pop() / predictivePop() / tab(forward) / sharedBounds`: the new screen glides
   1/14 of the width while the old drifts 1/40 the other way.
+- `RevealColumn { }`: a `Column` whose children enter in turn, without numbering them.
+- `BrTransitions.expandIn / collapseOut` (vertical disclosure), `revealStart / concealStart` (inline
+  content from the start edge), `swap` (one set of controls replacing another).
 - `SwapText`: old label lifts away as the new one rises.
 - `RollingNumber`: a slow odometer; only changed digits roll, up when growing.
 - `Modifier.pressable { }`: eases to `pressedScale` and dims 12% while held, no overshoot on release.
@@ -207,6 +210,8 @@ Stagger: 45ms per sibling, capped at index 8.
 | `BrButton(text, onClick, variant, size, icon, enabled, loading)` | pill; `Primary`, `Ink`, `Tonal`, `Glass`, `Plain`, `Critical`; `Large 54 / Medium 46 / Small 36`; `loading` crossfades to a spinner without resizing |
 | `BrIconButton(icon, contentDescription, onClick, variant)` | 44dp round; `Glass`, `Tonal`, `Plain`, `Ink`, `Primary` |
 | `BrChip(label, selected, onClick, count, icon)` | selected turns `ink`; count trails quietly |
+| `BrDayChip(label, selected, onClick, contentDescription)` | 40dp round day toggle for repeat pickers; selected fills with the accent |
+| `BrFab(icon, contentDescription, onClick)` | 56dp rounded square in the accent on a float shadow; eases in once, no spin |
 | `BrSwitch(checked, onCheckedChange)` | 50×30; thumb glides on `settle`, widens 6dp while held |
 | `BrCheckbox(checked, onCheckedChange)` | 32dp; the tick draws itself in one stroke |
 | `BrRadio(selected, onClick)` | 32dp; dot grows into the accent ring |
@@ -222,9 +227,11 @@ Stagger: 45ms per sibling, capped at index 8.
 | `BrBadge`, `BrTag(text, tone)`, `BrAvatar(name)` | the avatar tint is chosen from the name, so a person always keeps their colour |
 | `StatTile(label, value, unit, caption, icon, accent)` | metric card; value is a `RollingNumber` |
 | `EmptyState(icon, title, message, actionLabel)` | staggered, plainly worded |
-| `BrSheet(visible, onDismiss, title) { }` + `SheetAction` | glass sheet glides up; pull down past 25% or flick to dismiss |
-| `BrDialog(visible, …, destructive)` | eases in from 96%; destructive confirms in the critical tone |
+| `BrSheet(visible, onDismiss, title) { }` + `SheetAction` | in its own window (covers a nav bar); glides up; pull down past 25% or flick to dismiss; back dismisses |
+| `BrDialog(visible, …, destructive)` / `BrDialogFrame(visible, onDismiss) { }` | in its own window; eases in from 96%; destructive confirms in the critical tone. Keep them composed and drive `visible`, so exits play |
+| `BrMenu(expanded, onDismissRequest) { BrMenuItem(text, onClick, icon, selected, destructive) }` | anchored floating menu on a raised surface with a hairline; the selected item carries a check |
 | `BrPage(title, subtitle, onBack, actions) { lazy items }` | large title in the list; a glass `BrTopBar` fades in with a small centred title as you scroll |
+| `BrTopBar(title, collapse, onBack, actions)` + `BrLargeTitle(title, collapse)` + `rememberTopBarCollapse(listState \| scrollState)` + `topBarClearance()` | the same page built by hand, for screens with their own scrolling; the bar's side slots size to their content and the small title stays centred |
 | `BrNavBar(items, selectedIndex, onSelect, accessory, compact)` | see below; `rememberCompactNavState` drives `compact` from scrolling |
 
 ### The nav bar

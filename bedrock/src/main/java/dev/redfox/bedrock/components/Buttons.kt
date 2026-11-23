@@ -1,6 +1,7 @@
 package dev.redfox.bedrock.components
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -15,9 +16,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +36,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.redfox.bedrock.effects.floatShadow
 import dev.redfox.bedrock.effects.glass
 import dev.redfox.bedrock.effects.pressable
 import dev.redfox.bedrock.motion.BrDurations
@@ -76,6 +81,8 @@ public fun BrButton(
     icon: Painter? = null,
     enabled: Boolean = true,
     loading: Boolean = false,
+    /** Overrides the default haptic (Confirm for Primary, Ink and Critical; none otherwise). */
+    haptic: HapticFeedbackType? = null,
 ) {
     val colors = BedrockTheme.colors
     val type = BedrockTheme.typography
@@ -95,7 +102,7 @@ public fun BrButton(
             .pressable(
                 enabled = enabled && !loading,
                 pressedScale = 0.97f,
-                haptic = if (variant == ButtonVariant.Primary || variant == ButtonVariant.Ink || variant == ButtonVariant.Critical) HapticFeedbackType.Confirm else null,
+                haptic = haptic ?: if (variant == ButtonVariant.Primary || variant == ButtonVariant.Ink || variant == ButtonVariant.Critical) HapticFeedbackType.Confirm else null,
                 onClick = onClick,
             )
             .then(
@@ -146,6 +153,8 @@ public fun BrIconButton(
     size: Dp = 44.dp,
     enabled: Boolean = true,
     tint: Color? = null,
+    /** A haptic on click (e.g. ContextClick for an action that opens something); none by default. */
+    haptic: HapticFeedbackType? = null,
 ) {
     val colors = BedrockTheme.colors
     val iconTint by animateColorAsState(
@@ -161,7 +170,7 @@ public fun BrIconButton(
         modifier
             .size(size)
             .graphicsLayer { alpha = if (enabled) 1f else 0.4f }
-            .pressable(enabled = enabled, pressedScale = 0.94f, onClick = onClick)
+            .pressable(enabled = enabled, pressedScale = 0.94f, haptic = haptic, onClick = onClick)
             .then(
                 when (variant) {
                     IconButtonVariant.Glass -> Modifier.glass(CircleShape)
@@ -215,5 +224,38 @@ public fun BrChip(
         if (icon != null) Icon(icon, contentDescription = null, tint = content, modifier = Modifier.size(16.dp))
         Text(label, style = type.labelSmall, color = content)
         if (count != null) Text(count.toString(), style = type.caption.copy(fontFeatureSettings = "tnum"), color = meta)
+    }
+}
+
+/**
+ * The floating "add" button: a 56dp rounded square in the solid accent, resting on a soft neutral
+ * shadow. It eases in (a short rise and fade) when it first appears; no spin, no pop.
+ */
+@Composable
+public fun BrFab(
+    icon: Painter,
+    contentDescription: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = BedrockTheme.colors
+    val shape = RoundedCornerShape(20.dp)
+    val enter = remember { Animatable(0f) }
+    LaunchedEffect(Unit) { enter.animateTo(1f, tween(BrDurations.Enter, easing = BrMotion.Calm)) }
+    Box(
+        modifier
+            .size(56.dp)
+            .graphicsLayer {
+                alpha = enter.value
+                translationY = (1f - enter.value) * 10.dp.toPx()
+            }
+            .pressable(pressedScale = 0.94f, haptic = HapticFeedbackType.ContextClick, onClick = onClick)
+            .floatShadow(shape, radius = 18.dp, offsetY = 6.dp, alpha = 0.45f)
+            .clip(shape)
+            .background(colors.accentMain)
+            .semantics { this.contentDescription = contentDescription },
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(icon, contentDescription = null, tint = colors.onAccent, modifier = Modifier.size(26.dp))
     }
 }

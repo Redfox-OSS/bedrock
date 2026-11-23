@@ -63,7 +63,9 @@ public fun Modifier.glassSource(): Modifier {
  * a hairline that is brighter along the top and fades toward the bottom, the way real glass
  * reads under a ceiling light. That rim is what makes Bedrock glass look made, not filtered.
  *
- * A glass surface must be a sibling of the [glassSource] content, never inside it.
+ * A glass surface must be a sibling of the [glassSource] content, never inside it. Without a
+ * [LocalHazeState] (or inside another window, such as a dialog) it falls back to [tint] alone:
+ * the same colour, without the blur.
  */
 @Composable
 public fun Modifier.glass(
@@ -75,7 +77,9 @@ public fun Modifier.glass(
     val colors = BedrockTheme.colors
     val state = LocalHazeState.current
     val frosted = if (state == null) {
-        clip(shape).background(colors.surface.copy(alpha = 0.94f))
+        // No blur available (no provider, or another window): the tint alone. Over soft content
+        // (an aura, a dimmed page) that reads almost exactly like the frosted surface.
+        clip(shape).background(tint)
     } else {
         clip(shape).hazeEffect(
             state = state,
