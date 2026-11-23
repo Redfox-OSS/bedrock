@@ -1,0 +1,158 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "dev.redfox",
+    "module": "bedrock",
+    "version": "0.2.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.4.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.compose",
+          "module": "compose-bom",
+          "version": {
+            "requires": "2026.02.01"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-graphics"
+        },
+        {
+          "group": "androidx.compose.material3",
+          "module": "material3"
+        },
+        {
+          "group": "dev.chrisbanes.haze",
+          "module": "haze",
+          "version": {
+            "requires": "1.7.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.2.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "bedrock-0.2.0.aar",
+          "url": "bedrock-0.2.0.aar",
+          "size": 835915,
+          "sha512": "b5d5728bb5ab60f942def6f36029b5796441ae9b8852ae451e8bf0c0fe57ee6259ef5982ee6a0a2e30749e33a46bd93833fd452efa75e9905e537fb9c6bb9152",
+          "sha256": "b378408654c6ef251350ce793d56f948e97574b05184e645015c2d4337b91272",
+          "sha1": "1a97b10a975ba6b339b22c962606d7064e5508ad",
+          "md5": "04974d88a8676ac6f56004e8d85b9e31"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.compose",
+          "module": "compose-bom",
+          "version": {
+            "requires": "2026.02.01"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-tooling-preview"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-graphics"
+        },
+        {
+          "group": "androidx.compose.material3",
+          "module": "material3"
+        },
+        {
+          "group": "dev.chrisbanes.haze",
+          "module": "haze",
+          "version": {
+            "requires": "1.7.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.2.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "bedrock-0.2.0.aar",
+          "url": "bedrock-0.2.0.aar",
+          "size": 835915,
+          "sha512": "b5d5728bb5ab60f942def6f36029b5796441ae9b8852ae451e8bf0c0fe57ee6259ef5982ee6a0a2e30749e33a46bd93833fd452efa75e9905e537fb9c6bb9152",
+          "sha256": "b378408654c6ef251350ce793d56f948e97574b05184e645015c2d4337b91272",
+          "sha1": "1a97b10a975ba6b339b22c962606d7064e5508ad",
+          "md5": "04974d88a8676ac6f56004e8d85b9e31"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseSourcePublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "bedrock-0.2.0-sources.jar",
+          "url": "bedrock-0.2.0-sources.jar",
+          "size": 53111,
+          "sha512": "9d929e81e78dbc90a3cadb2452bf02bd1380b6c139998beae951a10e34266e73420c1e9b9042d303476ead1de7f82cdc0c9e9f13c79228421f30a41e25b6ae5d",
+          "sha256": "5a3adc03aabba756318ce78e6aaef3fab7a77e5a07b91a8056406cbaf082dd9b",
+          "sha1": "b8309febcd950d44cd7ad2726d850ee1519fc169",
+          "md5": "dc0ed0ca5f250e398575ea68bae5a6ae"
+        }
+      ]
+    }
+  ]
+}
