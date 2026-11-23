@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0
+
+- The pink accent is now red: `BedrockAccent.Red`, main `#EF3355` (soft `#FFC0C9`, deep `#6E1222`,
+  on-main `#34040E`), with a pink partner so its auras run red to pink. `BedrockAccent.Rose` is
+  deprecated and returns `Red`.
+
 ## 0.1.1
 
 - `BrSheet`, `BrDialog` and `BrDialogFrame` are solid surfaces. They open in their own window, which

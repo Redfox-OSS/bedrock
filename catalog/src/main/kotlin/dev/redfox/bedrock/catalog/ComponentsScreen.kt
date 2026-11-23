@@ -89,7 +89,7 @@ internal enum class Category(val title: String, val summary: String, @param:Draw
     Selection("Selection", "Switch, checkbox, radio, segments", R.drawable.ic_check, BedrockAccent.Moss),
     Inputs("Inputs", "Text fields, search, sliders", R.drawable.ic_search, BedrockAccent.Tide),
     Surfaces("Surfaces", "Cards, glass, aura", R.drawable.ic_layers, BedrockAccent.Iris),
-    Lists("Lists", "Grouped rows, avatars, tags", R.drawable.ic_user, BedrockAccent.Rose),
+    Lists("Lists", "Grouped rows, avatars, tags", R.drawable.ic_user, BedrockAccent.Red),
     Feedback("Feedback", "Progress, loading, toasts, empty states", R.drawable.ic_bell, BedrockAccent.Sand),
     Overlays("Overlays", "Sheets and dialogs", R.drawable.ic_archive, BedrockAccent.Tide),
     Navigation("Navigation", "A tab bar you can scrub, and its compact form", R.drawable.ic_compass, BedrockAccent.Ember),
@@ -331,7 +331,7 @@ private fun SurfacesPage() {
             GlassBackdrop(
                 Modifier.fillMaxWidth().height(180.dp).clip(BrShapes.XLarge),
                 backdrop = {
-                    Box(Modifier.matchParentSize().aura(remember { Aura.blend(BedrockAccent.Rose, BedrockAccent.Sand) }))
+                    Box(Modifier.matchParentSize().aura(remember { Aura.blend(BedrockAccent.Red, BedrockAccent.Sand) }))
                     Box(Modifier.align(Alignment.Center).size(96.dp).clip(BrShapes.Pill).background(BedrockAccent.Sand.soft))
                 },
             ) {
@@ -512,7 +512,7 @@ private fun NavigationPage() {
             GlassBackdrop(
                 Modifier.fillMaxWidth().clip(BrShapes.XLarge).consumeWindowInsets(WindowInsets.navigationBars),
                 backdrop = {
-                    Box(Modifier.matchParentSize().aura(remember { Aura.blend(BedrockAccent.Iris, BedrockAccent.Rose) }))
+                    Box(Modifier.matchParentSize().aura(remember { Aura.blend(BedrockAccent.Iris, BedrockAccent.Red) }))
                 },
             ) {
                 Column(Modifier.fillMaxWidth().padding(top = BrSpacing.XL)) {
@@ -550,7 +550,7 @@ private fun NavigationPage() {
             GlassBackdrop(
                 Modifier.fillMaxWidth().clip(BrShapes.XLarge).consumeWindowInsets(WindowInsets.navigationBars),
                 backdrop = {
-                    Box(Modifier.matchParentSize().aura(remember { Aura.blend(BedrockAccent.Sand, BedrockAccent.Rose) }))
+                    Box(Modifier.matchParentSize().aura(remember { Aura.blend(BedrockAccent.Sand, BedrockAccent.Red) }))
                 },
             ) {
                 BrNavBar(tabs, selected, { selected = it }, Modifier.padding(top = BrSpacing.XL, bottom = 4.dp), compact = compactState)

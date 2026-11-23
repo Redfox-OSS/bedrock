@@ -85,7 +85,7 @@ private data class Plan(
 private val Plans = listOf(
     Plan("Design review", "Bedrock tokens, with Maya and Arjun", "10:30", Area.Work, R.drawable.ic_layers, BedrockAccent.Iris),
     Plan("Walk by the river", "40 minutes, phone in the bag", "13:00", Area.Health, R.drawable.ic_leaf, BedrockAccent.Moss),
-    Plan("Pay the electricity bill", "₹2,340, due Tuesday", "16:00", Area.Home, R.drawable.ic_card, BedrockAccent.Rose),
+    Plan("Pay the electricity bill", "₹2,340, due Tuesday", "16:00", Area.Home, R.drawable.ic_card, BedrockAccent.Red),
     Plan("Write the release notes", "Bedrock 0.1", "17:30", Area.Work, R.drawable.ic_calendar, BedrockAccent.Tide),
     Plan("Water the balcony plants", "The basil looks thirsty", "19:00", Area.Home, R.drawable.ic_drop, BedrockAccent.Sand),
     Plan("Evening stretch", "15 minutes before bed", "21:30", Area.Health, R.drawable.ic_heart, BedrockAccent.Ember),

@@ -55,15 +55,19 @@ public data class BedrockAccent(
             partner = Color(0xFFC6D25C),
         )
 
-        /** Warm pink. */
-        public val Rose: BedrockAccent = BedrockAccent(
-            name = "Rose",
-            main = Color(0xFFEC6F8E),
-            soft = Color(0xFFFFC4D2),
-            deep = Color(0xFF6E1F38),
-            onMain = Color(0xFF33081A),
-            partner = Color(0xFFF2A04B),
+        /** A clear, warm red; its aura leans toward pink. */
+        public val Red: BedrockAccent = BedrockAccent(
+            name = "Red",
+            main = Color(0xFFEF3355),
+            soft = Color(0xFFFFC0C9),
+            deep = Color(0xFF6E1222),
+            onMain = Color(0xFF34040E),
+            partner = Color(0xFFEC6F8E),
         )
+
+        /** Rose became [Red] in 0.2.0. */
+        @Deprecated("Rose is now Red.", ReplaceWith("BedrockAccent.Red"))
+        public val Rose: BedrockAccent get() = Red
 
         /** Periwinkle. */
         public val Iris: BedrockAccent = BedrockAccent(
@@ -86,7 +90,7 @@ public data class BedrockAccent(
         )
 
         /** Every preset, in picker order. */
-        public val Presets: List<BedrockAccent> = listOf(Ember, Tide, Moss, Rose, Iris, Sand)
+        public val Presets: List<BedrockAccent> = listOf(Ember, Tide, Moss, Red, Iris, Sand)
     }
 }
 

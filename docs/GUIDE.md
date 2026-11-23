@@ -67,7 +67,7 @@ Mid-bright: lively enough to carry a screen, never neon. Each family has five to
 | Ember (default) | `#F2884B` | `#FFCBA8` | `#7A3212` | `#2B1205` | `#E8607A` |
 | Tide | `#4FA6E6` | `#B6DCF7` | `#123F66` | `#03203A` | `#52C9BA` |
 | Moss | `#5CC28A` | `#BDEBD0` | `#184D31` | `#06281A` | `#C6D25C` |
-| Rose | `#EC6F8E` | `#FFC4D2` | `#6E1F38` | `#33081A` | `#F2A04B` |
+| Red | `#EF3355` | `#FFC0C9` | `#6E1222` | `#34040E` | `#EC6F8E` |
 | Iris | `#8E8BF0` | `#D4D3FF` | `#302D80` | `#14123F` | `#4FA6E6` |
 | Sand | `#E3B04F` | `#F7DEA8` | `#684B14` | `#2E2005` | `#F2884B` |
 
